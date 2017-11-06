@@ -4,25 +4,28 @@
   float: left;
   margin: 30px 20px;
 }
+
 .div_cell {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   border-color: black;
   border-style: solid;
   display: inline-block;
   text-align: center;
-  font-size: xx-large;
-  line-height: 100px;
+  font-size: x-large;
+  line-height: 50px;
 }
+
 .active {
   background-color: DarkOliveGreen;
 }
+
 .inactive {
   background-color: white;
-
 }
-.words_we_need{
-  padding-top: 20px;
+
+.words_we_need {
+  padding-top: 100px;
   column-count: 1; /*количество колонок, на которое хотим разбить текст*/
   -moz-column-count: 1; /*для мозилы*/
   -webkit-column-count: 1; /*для webkit браузеров*/
@@ -32,8 +35,4 @@
   width: 75px;
   height: 50%;
   font-size: x-large;
-
-
-
-
 }

@@ -6,6 +6,7 @@ var items = [
   { name: "car", source:"img/car.jpg"},
   { name:"parrot", source:"img/parrot.jpg"}
 ];
+document.getElementById("mal").style.visibility = "hidden";
 
 var digitNames = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
@@ -76,9 +77,12 @@ function ans_inDiv(){
   return ans_divs;
 }
 
+function time() { document.getElementById("mal").style.visibility = "hidden";}
+
 function check_answer(el) {
   if (el.id == "correct") {
-    
+    document.getElementById("mal").style.visibility = "visible";
+    setTimeout(time, 5000);
   }
 }
 
