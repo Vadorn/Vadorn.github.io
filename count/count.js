@@ -20,6 +20,7 @@ function adding_imgs(){
   for (; i < imgQty; i++ ) {
      var new_img = document.createElement('img');
      new_img.src = item.source;
+     new_img.classList.add("flex-item");
      cont.appendChild(new_img);
   }
   console.log(item);
@@ -83,6 +84,8 @@ function check_answer(el) {
   if (el.id == "correct") {
     document.getElementById("mal").style.visibility = "visible";
     setTimeout(time, 5000);
+  } else {
+    alert("gg")
   }
 }
 
