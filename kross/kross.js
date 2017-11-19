@@ -1,9 +1,10 @@
 var letter = "";
 var words = ["APPLE", "CAR", "BALL", "DOG","EGG", "FISH", "GIRAFFE", "HORSE", "JUICE", "KEY", "LION", "NUTS", "OWL", "PARROT", "QUEEN", "RABBIT", "SUN", "UMBRELLA", "VASE", "WHALE", "ZEBRA", "YELLOW", "RED", "ORANGE", "PURPLE"]
 var words_count = 8;
+var words_ukr = ["ЯБЛУКО", "АВТОМОБІЛЬ", "М'ЯЧ'", "СОБАКА","ЯЙЦЕ", "РИБА", "ЖИРАФ", "КІНЬ", "СІК", "КЛЮЧ", "ЛЕВ", "ГОРІХИ", "СОВА", "ПАПУГА", "КОРОЛЕВА", "КРОЛИК", "СОНЦЕ", "ПАРАСОЛЬКА", "ВАЗА", "КИТ", "ЗЕБРА", "ЖОВТИЙ", "ЧЕРВОНИЙ", "ОРАНЖЕВИЙ", "ФЫОЛЕТОВИЙ"]
 var rows = 8;
 var columns = 8;
-var addedWords = [];
+var addedWords = { english : [], ukrainian : [] };
 document.getElementById("img").style.visibility = "hidden";
 
 // The list of all the possible orientations
@@ -42,20 +43,27 @@ var skipOrientations = {
 function fillQuestWords(wordQty) {
   var wordsToReturn = [];
   var workWords = words;
-
+  var workWords_ukr = words_ukr;
+  var wordsToReturn_ukr = [];
   for (var i = 0; i < wordQty; i++) {
-    var wordToAdd = workWords[Math.floor(Math.random() * workWords.length)];
+    var index_word = Math.floor(Math.random() * workWords.length);
+    var wordToAdd = workWords[index_word];
+    var wordToAdd_ukr = workWords_ukr[index_word];
     wordsToReturn.push(wordToAdd);
+    wordsToReturn_ukr.push(wordToAdd_ukr);
+    workWords_ukr = workWords_ukr.filter(function(word){
+      return (word != wordToAdd_ukr);
+    });
     workWords = workWords.filter(function(word) {
       return (word != wordToAdd);
     });
   }
-  return wordsToReturn;
+  return { english : wordsToReturn, ukrainian : wordsToReturn_ukr };
 }
 
 
 function checkLetter() {
-  var compWord = addedWords.filter(function(word) {
+  var compWord = addedWords.english.filter(function(word) {
     return (word.indexOf(letter) == 0);
   });
   if (compWord.length == 0) {
@@ -95,21 +103,24 @@ function time() { document.getElementById("img").style.visibility = "hidden";}
 
 function strike() {
   var i = 0
-  for (; letter != addedWords[i]; i++){
+  for (; letter != addedWords.english[i]; i++){
 
-  }  addedWords[i] = "<strike>" + addedWords[i] + "</strike> ";
+  }
+  addedWords.english[i] = "<strike>" + addedWords.english[i] + "</strike> ";
+  addedWords.ukrainian[i] = "<strike>" + addedWords.ukrainian[i] + "</strike> ";
 }
 
 function congrat(){
   var i = 0;
-  for(; i < addedWords.length; i++) {
-    if (addedWords[i].indexOf('strike') == -1) {
+  for(; i < addedWords.english.length; i++) {
+    if (addedWords.english[i].indexOf('strike') == -1) {
       break;
     }
   }
   console.log('i=' + i);
-  if (i == addedWords.length) {
-    addedWords = [];
+  if (i == addedWords.english.length) {
+    addedWords.english = [];
+    addedWords.ukrainian = [];
     document.getElementById("img").style.visibility = "visible";
     setTimeout(time, 5000);
     new_game();
@@ -172,9 +183,9 @@ var placeWord = function (puzzle, word, x, y, fnGetSquare) {
 };
 
 function fillWords(puzzle, height, width, wordsToPut) {
-  for (var i = 0; i < wordsToPut.length; i++) {
+  for (var i = 0; i < wordsToPut.english.length; i++) {
     var locations = [];
-    var word = wordsToPut[i];
+    var word = wordsToPut.english[i];
     var wordLen = word.length;
     for (var direct = 0; direct < allOrientations.length; direct++) {
       var direction = allOrientations[direct];
@@ -202,7 +213,8 @@ function fillWords(puzzle, height, width, wordsToPut) {
     if (locations.length !== 0) {
       var sel = locations[Math.floor(Math.random() * locations.length)];
       placeWord(puzzle, word, sel.x, sel.y, orientations[sel.orientation]);
-      addedWords.push(word);
+      addedWords.english.push(word);
+      addedWords.ukrainian.push(wordsToPut.ukrainian[i]);
     }
   }
 }
@@ -232,8 +244,8 @@ function fieldToDiv(puzzle, height, width) {
 function addedWords_fill() {
   var stringFromWords = "";
   var words_we_need = document.getElementsByClassName('words_we_need');
-  for (var i = 0; i < addedWords.length; i++) {
-    stringFromWords += addedWords[i] + ' ';
+  for (var i = 0; i < addedWords.ukrainian.length; i++) {
+    stringFromWords += addedWords.ukrainian[i] + ' ';
   }
   console.log(stringFromWords);
   words_we_need[0].innerHTML = stringFromWords;
