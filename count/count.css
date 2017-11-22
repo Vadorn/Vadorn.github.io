@@ -1,8 +1,13 @@
 img {
   width: 150px;
 }
-#mal{
+#winmal{
   width: 300px;
+  position: absolute;
+}
+#losemal{
+  width: 300px;
+  position: absolute;
 }
 .for_answers{
 cursor: pointer;

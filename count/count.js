@@ -1,3 +1,10 @@
+document.getElementById("winmal").style.visibility = "hidden";
+document.getElementById("losemal").style.visibility = "hidden";
+
+var winPosTop = document.getElementById("winmal").offsetTop;
+var winPosLeft = document.getElementById("winmal").offsetLeft;
+document.getElementById("losemal").offsetTop = winPosTop;
+document.getElementById("losemal").offsetLeft = winPosLeft;
 
 var items = [
   { name: "apple", source : "img/apple.jpg"},
@@ -6,7 +13,6 @@ var items = [
   { name: "car", source:"img/car.jpg"},
   { name:"parrot", source:"img/parrot.jpg"}
 ];
-document.getElementById("mal").style.visibility = "hidden";
 
 var digitNames = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
@@ -26,25 +32,20 @@ function adding_imgs(){
   console.log(item);
   return {Qty : imgQty, type : item};
 }
-var questItem = adding_imgs();
 
-
-function answers() {
+function answers(questItem) {
   var answer_name;
-  if(questItem.Qty > 1){
+  if(questItem.Qty > 1) {
     answer_name = digitNames[questItem.Qty - 1];
     answer_name += "  "
     answer_name += questItem.type.name + "s";
-
   }
-  else{ answer_name = digitNames[0];
-  answer_name += " ";
-  answer_name += questItem.type.name;
-}
+  else { answer_name = digitNames[0];
+    answer_name += " ";
+    answer_name += questItem.type.name;
+  }
   return answer_name;
 }
-
-var answersArray = answers();
 
 function fake_answers(){
   var inn_answers = [];
@@ -59,34 +60,61 @@ function fake_answers(){
     return inn_answers;
   }
 
-var not_answers = fake_answers();
-
-function ans_inDiv(){
-  var ans_divs = document.getElementsByClassName('for_answers')
+function ans_inDiv(correctAnswer, wrongAnswers) {
+  var ans_divs = document.getElementsByClassName('for_answers');
   console.log(ans_divs);
   var number = Math.floor(Math.random() * ans_divs.length);
   //answersArray.innerHTML = ans_divs[Math.floor(Math.random() * ans_divs.length)];
-  ans_divs[number].innerHTML = answersArray;
+  ans_divs[number].innerHTML = correctAnswer;
   console.log(number);
   ans_divs[number].id = "correct";
   for( var i = 0,wrongAnsNum = 0; i < ans_divs.length; i++){
     if(ans_divs[i].id != "correct"){
-      ans_divs[i].innerHTML = not_answers[wrongAnsNum];
+      ans_divs[i].innerHTML = wrongAnswers[wrongAnsNum];
       wrongAnsNum++;
     }
   }
   return ans_divs;
 }
 
-function time() { document.getElementById("mal").style.visibility = "hidden";}
+function time_win() {
+  document.getElementById("winmal").style.visibility = "hidden";
+  clearField();
+  new_game();
+}
+
+function time_lose() {
+  document.getElementById('losemal').style.visibility = "hidden";
+  clearField();
+  new_game();
+}
 
 function check_answer(el) {
   if (el.id == "correct") {
-    document.getElementById("mal").style.visibility = "visible";
-    setTimeout(time, 5000);
+    document.getElementById("winmal").style.visibility = "visible";
+    setTimeout(time_win, 2000);
   } else {
-    alert("gg")
+    document.getElementById('losemal').style.visibility = "visible";
+    setTimeout(time_lose, 2000);
   }
 }
 
-var answer_div = ans_inDiv();
+function clearField() {
+  document.getElementById('cont').innerHTML = "";
+  var ans_divs = document.getElementsByClassName('for_answers');
+  for( var i = 0; i < ans_divs.length; i++){
+    ans_divs[i].innerHTML = "";
+    if (ans_divs[i].id == "correct") {
+      ans_divs[i].id = "";
+    }
+  }
+}
+
+function new_game() {
+  var questItem = adding_imgs();
+  var correctAnswer = answers(questItem);
+  var wrongAnswers = fake_answers();
+  var answer_div = ans_inDiv(correctAnswer, wrongAnswers);
+}
+
+new_game();
